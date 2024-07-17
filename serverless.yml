@@ -1,4 +1,4 @@
-service: live020
+service: aws-serverless-authentication
 frameworkVersion: '3'
 
 plugins:
@@ -16,16 +16,16 @@ provider:
 
 custom:
   esbuild:
-  bundle: true
-  minify: true
-  sourcemap: false
-  target: node20
-  exclude:
-    - '@aws-sdk/*'
-  define:
-    require.resolve: undefined
-  platform: node
-  concurrency: 10
+    bundle: true
+    minify: true
+    sourcemap: false
+    target: node20
+    exclude:
+      - '@aws-sdk/*'
+    define:
+      require.resolve: undefined
+    platform: node
+    concurrency: 10
 
 functions:
   hello:
