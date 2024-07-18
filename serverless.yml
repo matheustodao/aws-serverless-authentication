@@ -36,6 +36,7 @@ resources:
       Type: AWS::Cognito::UserPool
       Properties:
         DeletionProtection: INACTIVE
+        UserPoolName: AuthUserPool
         AccountRecoverySetting:
           RecoveryMechanisms:
             - Name: verified_email
