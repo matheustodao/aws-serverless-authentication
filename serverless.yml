@@ -1,5 +1,5 @@
 service: aws-serverless-authentication
-frameworkVersion: '3'
+frameworkVersion: '4'
 
 plugins:
   - serverless-esbuild
@@ -14,6 +14,9 @@ provider:
   deploymentMethod: direct
   architecture: arm64
 
+build:
+  esbuild: false
+
 custom:
   esbuild:
     bundle: true
@@ -26,6 +29,36 @@ custom:
       require.resolve: undefined
     platform: node
     concurrency: 10
+
+resources:
+  Resources:
+    AuthUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        DeletionProtection: INACTIVE
+        AccountRecoverySetting:
+          RecoveryMechanisms:
+            - Name: verified_email
+              Priority: 1
+        AdminCreateUserConfig:
+          AllowAdminCreateUserOnly: false
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 6
+            RequireLowercase: false
+            RequireNumbers: false
+            RequireSymbols: false
+            RequireUppercase: false
+            TemporaryPasswordValidityDays: 2
+        Schema:
+          - Name: given_name
+            Mutable: true
+            Required: true
+            AttributeDataType: String
 
 functions:
   hello:
