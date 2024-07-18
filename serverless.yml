@@ -60,7 +60,19 @@ resources:
             Mutable: true
             Required: true
             AttributeDataType: String
-
+    AuthUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: AuthUserPoolClient
+        UserPoolId: !Ref AuthUserPool
+        ExplicitAuthFlows:
+          - ALLOW_USER_PASSWORD_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+        TokenValidityUnits:
+          AccessToken: hours
+          RefreshToken: hours
+        AccessTokenValidity: 3
+        RefreshTokenValidity: 72 # 3 days
 functions:
   hello:
     handler: src/functions/hello.handler
