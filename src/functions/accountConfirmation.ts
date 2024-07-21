@@ -18,7 +18,7 @@ export async function handler(event: APIGatewayProxyEventV2) {
     return response(204);
   } catch (error) {
     return response(500, {
-      message: 'Internal server error'
+      error: 'Internal server error'
     });
   }
 }

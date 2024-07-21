@@ -25,12 +25,12 @@ export async function handler(event: APIGatewayProxyEventV2) {
   } catch (error) {
     if (error instanceof UsernameExistsException) {
       return response(401, {
-        message: 'This email already in use'
+        error: 'This email already in use'
       });
     }
 
     return response(500, {
-      message: 'Internal server error'
+      error: 'Internal server error'
     });
   }
 }
