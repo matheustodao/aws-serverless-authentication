@@ -18,7 +18,7 @@ export async function handler(event: APIGatewayProxyEventV2) {
 
     const { UserSub } = await cognitoClient.send(command);
 
-    return response(200, {
+    return response(201, {
       id: UserSub,
       ...body
     });
