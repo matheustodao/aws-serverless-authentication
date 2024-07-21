@@ -4,28 +4,34 @@ import { AdminGetUserCommand } from '@aws-sdk/client-cognito-identity-provider';
 import { APIGatewayProxyEventV2WithJWTAuthorizer } from 'aws-lambda';
 
 export async function handler(event: APIGatewayProxyEventV2WithJWTAuthorizer) {
-  const userId = event.requestContext.authorizer.jwt.claims.sub as string;
+  try {
+    const userId = event.requestContext.authorizer.jwt.claims.sub as string;
 
-  const command = new AdminGetUserCommand({
-    Username: userId,
-    UserPoolId: process.env.COGNITO_POOL_ID
-  });
+    const command = new AdminGetUserCommand({
+      Username: userId,
+      UserPoolId: process.env.COGNITO_POOL_ID
+    });
 
-  const { UserAttributes } = await cognitoClient.send(command);
+    const { UserAttributes } = await cognitoClient.send(command);
 
-  const profile = UserAttributes?.reduce((profileObj, { Name, Value }) => {
-    const keyMap = {
-      sub: 'id',
-      given_name: 'name'
-    };
+    const profile = UserAttributes?.reduce((profileObj, { Name, Value }) => {
+      const keyMap = {
+        sub: 'id',
+        given_name: 'name'
+      };
 
-    return {
-      ...profileObj,
-      [keyMap[Name as keyof typeof keyMap] ?? Name]: Value
-    };
-  }, {} as any);
+      return {
+        ...profileObj,
+        [keyMap[Name as keyof typeof keyMap] ?? Name]: Value
+      };
+    }, {} as any);
 
-  return response(200, {
-    profile
-  });
+    return response(200, {
+      profile
+    });
+  } catch {
+    return response(500, {
+      error: 'Internal server error'
+    });
+  }
 }
