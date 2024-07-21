@@ -20,7 +20,6 @@ export async function handler(event: APIGatewayProxyEventV2) {
 
     return response(201, {
       id: UserSub,
-      ...body
     });
   } catch (error) {
     if (error instanceof UsernameExistsException) {
